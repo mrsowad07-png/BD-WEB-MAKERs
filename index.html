@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src data: https:; connect-src https://bd-web-maker-default-rtdb.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Web Maker – Custom Website Order</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050914;--card:rgba(14,19,32,.78);--p:#00f2fe;--a:#4facfe;--v:#9b5cff;--t:#f0f6fc;--m:#8b949e;--b:#263047;--ok:#2ea44f;--bad:#ff5c5c;--warn:#f7b731;--tg:#0088cc}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Hind Siliguri',sans-serif}
+body{background:var(--bg);color:var(--t);min-height:100vh;padding:20px;display:flex;justify-content:center;align-items:flex-start;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(79,172,254,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(79,172,254,.06) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(ellipse at 50% 30%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse at 50% 30%,#000 20%,transparent 75%);animation:gridmove 14s linear infinite}
+@keyframes gridmove{to{background-position:46px 46px,46px 46px}}
+.aur{position:fixed;width:46vw;height:46vw;max-width:560px;max-height:560px;border-radius:50%;filter:blur(90px);opacity:.28;pointer-events:none;z-index:0;animation:drift 16s ease-in-out infinite alternate}
+.aur.a1{background:var(--p);top:-12%;left:-10%}.aur.a2{background:var(--v);bottom:-14%;right:-10%;animation-delay:-8s}
+@keyframes drift{to{transform:translate(8vw,6vh) scale(1.2)}}
+.hide{display:none!important}
+#bg,#fx{position:fixed;inset:0;pointer-events:none}#bg{z-index:0}#fx{z-index:70}
+.app{position:relative;z-index:1;width:100%;max-width:940px;margin:auto;background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--b);border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.65),0 0 0 1px rgba(0,242,254,.04) inset;overflow:hidden;animation:rise .8s cubic-bezier(.2,.8,.2,1)}
+.app::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--p),var(--v),transparent);background-size:200% 100%;animation:flow 4s linear infinite;z-index:5}
+@keyframes rise{from{opacity:0;transform:translateY(34px) scale(.98)}}
+/* banner */
+.banner{position:relative;display:block;width:100%;aspect-ratio:3/1;max-height:300px;overflow:hidden;background:#0b0f19;border-bottom:1px solid var(--b)}
+.banner img{width:100%;height:100%;object-fit:cover;display:block;animation:bnin 1s ease}
+.banner::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(5,9,20,.7));pointer-events:none}
+.banner::before{content:"";position:absolute;top:0;bottom:0;width:30%;left:-40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.18),transparent);z-index:2;animation:shine 5s ease-in-out infinite}
+@keyframes shine{60%,100%{left:130%}}@keyframes bnin{from{opacity:0;transform:scale(1.06)}}
+header{padding:24px 22px 20px;text-align:center;border-bottom:1px solid var(--b);background:linear-gradient(135deg,rgba(0,242,254,.08),rgba(155,92,255,.08))}
+header h1{font-size:2rem;background:linear-gradient(90deg,var(--p),var(--a),var(--v),var(--p));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 6s linear infinite;user-select:none;display:inline-block;cursor:pointer;letter-spacing:.5px}
+header h1 i{-webkit-text-fill-color:var(--p);animation:blink 2.4s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+@keyframes flow{to{background-position:300% 0}}
+header p{color:var(--m);font-size:.92rem;margin-top:4px}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.badges span{font-size:.76rem;color:var(--p);border:1px solid rgba(0,242,254,.3);background:rgba(0,242,254,.07);padding:3px 11px;border-radius:20px}
+.ubar{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:12px;font-size:.85rem;color:var(--m)}
+.ubar button{background:rgba(255,255,255,.06);border:1px solid var(--b);color:var(--t);border-radius:20px;padding:5px 14px;cursor:pointer;font-size:.85rem;transition:.2s}
+.ubar button:hover{border-color:var(--p);box-shadow:0 0 14px rgba(0,242,254,.2)}
+.stepper{display:flex;justify-content:center;gap:10px;padding:14px;border-bottom:1px solid var(--b);background:rgba(0,0,0,.18)}
+.stp{text-align:center;flex:0 0 auto;width:72px}.stp i{display:block;height:5px;border-radius:5px;background:var(--b);transition:.6s}.stp span{font-size:.68rem;color:var(--m);display:block;margin-top:5px;transition:.4s}
+.stp.on i{background:linear-gradient(90deg,var(--p),var(--a));box-shadow:0 0 12px var(--p)}.stp.on span{color:var(--p)}
+.screen{display:none;padding:28px}.screen.on{display:block}
+.screen.fwd{animation:fwd .5s cubic-bezier(.2,.8,.2,1)}.screen.back{animation:bck .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes fwd{from{opacity:0;transform:translateX(44px);filter:blur(4px)}}@keyframes bck{from{opacity:0;transform:translateX(-44px);filter:blur(4px)}}
+h2{font-size:1.4rem;margin-bottom:6px}.sub{color:var(--m);font-size:.92rem;margin-bottom:20px;line-height:1.6}
+.back-btn{background:none;border:none;color:var(--m);cursor:pointer;font-size:.95rem;margin-bottom:14px;transition:.2s;display:block}.back-btn:hover{color:var(--p);transform:translateX(-3px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+.card{background:rgba(255,255,255,.03);border:none;border-radius:18px;padding:24px 16px;text-align:center;cursor:pointer;transition:box-shadow .3s,transform .25s;color:var(--t);font-size:1rem;position:relative;overflow:hidden;animation:pop .6s backwards;animation-delay:calc(var(--i,0)*.1s);transform-style:preserve-3d}
+.card::before{content:"";position:absolute;inset:0;border-radius:18px;padding:2px;background:linear-gradient(135deg,var(--b),var(--b));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;transition:.3s;pointer-events:none}
+.card:hover::before,.card.hot::before{background:linear-gradient(135deg,var(--p),var(--v),var(--a),var(--p));background-size:300% 300%;animation:flow 3s linear infinite}
+.card::after{content:"";position:absolute;left:0;right:0;top:-60%;height:40%;background:linear-gradient(180deg,transparent,rgba(0,242,254,.12),transparent);opacity:0;pointer-events:none}
+.card:hover::after{opacity:1;animation:scan 1.6s linear infinite}
+@keyframes scan{to{top:130%}}
+@keyframes pop{from{opacity:0;transform:translateY(28px) scale(.92)}}
+.card:hover{box-shadow:0 14px 34px rgba(79,172,254,.22)}
+.card.hot{animation:pop .6s backwards calc(var(--i,0)*.1s),glow 2.4s ease-in-out infinite alternate}
+@keyframes glow{to{box-shadow:0 0 30px rgba(0,242,254,.32)}}
+.card .ic{font-size:2rem;color:var(--p);margin-bottom:8px;animation:float 3s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-5px)}}
+.card .nm{font-weight:700;font-size:1.08rem}.card .pr{font-size:1.75rem;font-weight:700;color:var(--p);margin:8px 0;text-shadow:0 0 16px rgba(0,242,254,.4)}
+.card .ds{font-size:.84rem;color:var(--m);line-height:1.5}
+.tag{position:absolute;top:10px;right:10px;background:linear-gradient(90deg,var(--p),var(--a));color:#000;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;z-index:2}
+.feat{list-style:none;margin:16px 0 22px}
+.feat li{padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid var(--b);border-radius:10px;margin-bottom:8px;font-size:.95rem;animation:pop .45s backwards;animation-delay:calc(var(--i)*.08s)}
+.feat i{color:var(--ok);margin-right:10px}
+.big{font-size:2.6rem;font-weight:700;color:var(--p);text-shadow:0 0 22px rgba(0,242,254,.45)}
+label{display:block;margin-bottom:7px;font-weight:600;font-size:.95rem}.fg{margin-bottom:18px}
+.in{width:100%;padding:12px 14px;background:#0b0f19;border:1px solid var(--b);border-radius:10px;color:var(--t);font-size:1rem;outline:none;transition:.3s}
+.in:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,242,254,.15),0 0 18px rgba(0,242,254,.12)}
+textarea.in{min-height:120px;resize:vertical}
+.err{color:var(--bad);font-size:.82rem;margin-top:5px;display:none}.fg.bad .err{display:block}.fg.bad .in{border-color:var(--bad);animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.btn{position:relative;overflow:hidden;width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--p),var(--a),var(--v));background-size:200% 200%;color:#001018;font-size:1.05rem;font-weight:700;cursor:pointer;transition:.3s;margin-top:8px;display:block;animation:flow 6s linear infinite}
+.btn:hover{box-shadow:0 0 26px rgba(0,242,254,.5);transform:translateY(-2px)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.tg{background:var(--tg);color:#fff;text-decoration:none;text-align:center;animation:none}
+.btn.ghost{background:transparent;border:1px solid var(--b);color:var(--t);animation:none}.btn.ghost:hover{border-color:var(--p)}
+.rip{position:absolute;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.5);transform:translate(-50%,-50%) scale(0);animation:rp .6s ease-out;pointer-events:none}
+@keyframes rp{to{transform:translate(-50%,-50%) scale(32);opacity:0}}
+.center{text-align:center}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:#111827;border:1px solid var(--p);padding:10px 20px;border-radius:30px;transition:.35s;z-index:90;font-size:.9rem;max-width:92vw;text-align:center;box-shadow:0 0 24px rgba(0,242,254,.25)}
+.toast.show{transform:translateX(-50%)}
+.emailbox{max-width:360px;margin:0 auto;text-align:left}
+.ord{background:#0b0f19;border:1px solid var(--b);border-radius:14px;padding:16px;margin-bottom:14px;line-height:1.8;word-break:break-word;animation:pop .45s backwards}
+.ord.pending{border-left:4px solid var(--warn)}.ord.approved{border-left:4px solid var(--ok)}.ord.rejected{border-left:4px solid var(--bad)}
+.ord .oh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.ord .oid{font-weight:700;color:var(--p)}
+.bd{padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;height:fit-content}
+.bd.pending{background:rgba(247,183,49,.15);color:var(--warn)}.bd.approved{background:rgba(46,164,79,.15);color:var(--ok)}.bd.rejected{background:rgba(255,92,92,.15);color:var(--bad)}
+.ord .note{padding:12px 14px;border-radius:10px;font-size:.92rem;margin:10px 0 4px;line-height:1.7}
+.note.pending{background:rgba(247,183,49,.1);border:1px solid var(--warn)}.note.approved{background:rgba(46,164,79,.12);border:1px solid var(--ok)}.note.rejected{background:rgba(255,92,92,.1);border:1px solid var(--bad)}
+.skel{height:90px;border-radius:14px;margin-bottom:12px;background:linear-gradient(90deg,#0b0f19 25%,#18202f 50%,#0b0f19 75%);background-size:200% 100%;animation:sk 1.2s linear infinite}@keyframes sk{to{background-position:-200% 0}}
+#go{position:fixed;inset:0;z-index:80;background:rgba(5,9,20,.92);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:20px}#go.on{display:flex;animation:rise .4s}
+.spin{width:64px;height:64px;border-radius:50%;border:4px solid var(--b);border-top-color:var(--p);border-right-color:var(--v);animation:sp .9s linear infinite;box-shadow:0 0 24px rgba(0,242,254,.3)}@keyframes sp{to{transform:rotate(360deg)}}
+
+/* admin */
+#adm{position:fixed;inset:0;z-index:60;background:var(--bg);overflow-y:auto;padding:16px;display:none}#adm.on{display:block}
+#adm .wrap{max-width:1000px;margin:auto}
+#adm h1{font-size:1.5rem;background:linear-gradient(90deg,var(--p),var(--a));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:4px}
+#adm .box{background:#121724;border:1px solid var(--b);border-radius:16px;padding:22px}
+#alogin{max-width:400px;margin:10vh auto 0;animation:rise .5s ease}
+#adm .in{margin-bottom:12px}
+#adm .ab{border:none;border-radius:10px;padding:11px 16px;font-weight:700;font-size:.95rem;cursor:pointer;background:linear-gradient(135deg,var(--p),var(--a));color:#001018;transition:.2s}
+#adm .ab:hover{filter:brightness(1.1)}#adm .ab:disabled{opacity:.5;cursor:not-allowed}
+#adm .ab.full{width:100%}#adm .ab.g{background:transparent;border:1px solid var(--b);color:var(--t)}#adm .ab.g.act{border-color:var(--p);color:var(--p)}
+#adm .ab.ok{background:var(--ok);color:#fff}#adm .ab.no{background:var(--warn);color:#201500}#adm .ab.del{background:var(--bad);color:#fff}
+#adm .msg{color:var(--bad);font-size:.88rem;margin-top:10px;min-height:1.2em}
+#adm .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+#adm .tabs{display:flex;gap:8px;margin-bottom:14px}
+#adm .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+#adm .st{background:#121724;border:1px solid var(--b);border-radius:14px;padding:14px;animation:rise .5s backwards}
+#adm .st b{display:block;font-size:1.6rem;color:var(--p)}#adm .st span{color:var(--m);font-size:.85rem}
+#adm .tools{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}#adm .tools .in{margin:0;flex:1;min-width:160px}#adm .tools select.in{flex:0 0 auto;width:auto}
+#adm .o{background:#121724;border:1px solid var(--b);border-radius:14px;padding:16px;margin-bottom:12px;animation:rise .4s backwards}
+#adm .o.pending{border-left:4px solid var(--warn)}#adm .o.approved{border-left:4px solid var(--ok)}#adm .o.rejected{border-left:4px solid var(--bad)}
+#adm .oh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+#adm .id{font-weight:700;color:var(--p)}#adm .time{color:var(--m);font-size:.82rem}
+#adm .badge{padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;height:fit-content}
+#adm .badge.pending{background:rgba(247,183,49,.15);color:var(--warn)}#adm .badge.approved{background:rgba(46,164,79,.15);color:var(--ok)}#adm .badge.rejected{background:rgba(255,92,92,.15);color:var(--bad)}
+#adm .rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 16px;font-size:.92rem;line-height:1.8}#adm .rows span{color:var(--m)}
+#adm .trx{font-family:monospace;color:var(--p);cursor:pointer;word-break:break-all}#adm .bad{color:var(--bad)}
+#adm .desc{margin-top:8px;padding:10px;background:#0b0f19;border-radius:8px;font-size:.88rem;color:#c9d1d9;white-space:pre-wrap;word-break:break-word}
+#adm .acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}#adm .empty{text-align:center;color:var(--m);padding:40px}
+#adm .bprev{width:100%;aspect-ratio:3/1;border-radius:12px;border:1px dashed var(--b);background:#0b0f19;display:flex;align-items:center;justify-content:center;color:var(--m);overflow:hidden;margin-bottom:12px}
+#adm .bprev img{width:100%;height:100%;object-fit:cover}
+#adm label{font-size:.88rem;color:var(--m);font-weight:500}
+#adm .chk{display:flex;align-items:center;gap:8px;margin-bottom:14px;color:var(--t)}#adm .chk input{width:18px;height:18px}
+@media(max-width:600px){.screen{padding:20px}.stp{width:58px}.banner{aspect-ratio:2/1}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="aur a1"></div><div class="aur a2"></div>
+<canvas id="bg"></canvas><canvas id="fx"></canvas>
+<div id="go"><div class="spin"></div><h2>সিকিউর পেমেন্ট পেজে নেওয়া হচ্ছে...</h2><p class="sub" style="margin:0">একটু অপেক্ষা করুন, পেজ বন্ধ করবেন না</p></div>
+<div class="app">
+  <a class="banner hide" id="banner" target="_blank" rel="noopener noreferrer"><img id="bannerImg" alt="ব্যানার" referrerpolicy="no-referrer"></a>
+  <header><h1 id="logo"><i class="fa-solid fa-code"></i> Web Maker</h1><p>আপনার চাহিদা অনুযায়ী কাস্টম ওয়েবসাইটের সেরা সমাধান</p>
+    <div class="badges"><span><i class="fa-solid fa-shield-halved"></i> সিকিউর পেমেন্ট</span><span><i class="fa-solid fa-bolt"></i> দ্রুত ডেলিভারি</span><span><i class="fa-brands fa-telegram"></i> টেলিগ্রাম সাপোর্ট</span></div>
+    <div class="ubar"><button type="button" data-go="orders"><i class="fa-solid fa-box-open"></i> আমার অর্ডার</button><span id="uinfo" class="hide"></span><button type="button" id="ulogout" class="hide"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button></div>
+  </header>
+  <div class="stepper" id="stepper"></div>
+
+  <section class="screen on" id="home">
+    <h2>প্যাকেজ বেছে নিন</h2><p class="sub">যেকোনো প্যাকেজে ক্লিক করলে তার বিস্তারিত দেখতে পাবেন।</p>
+    <div class="grid" id="pkgGrid"></div>
+  </section>
+
+  <section class="screen" id="pkg">
+    <button type="button" class="back-btn" data-go="home"><i class="fa-solid fa-arrow-left"></i> ফিরে যান</button>
+    <h2 id="pkName"></h2><div class="big" id="pkPrice"></div>
+    <ul class="feat" id="pkFeat"></ul>
+    <button type="button" class="btn" data-go="form">এই প্যাকেজ নিন <i class="fa-solid fa-arrow-right"></i></button>
+  </section>
+
+  <section class="screen center" id="login">
+    <button type="button" class="back-btn" data-go="home" style="text-align:left"><i class="fa-solid fa-arrow-left"></i> ফিরে যান</button>
+    <h2><i class="fa-solid fa-user-lock"></i> লগইন / রেজিস্টার</h2>
+    <p class="sub">অর্ডার করতে ও অর্ডারের স্ট্যাটাস দেখতে ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করুন, অথবা নতুন অ্যাকাউন্ট খুলুন।</p>
+    <div class="emailbox">
+      <div class="fg" style="margin-bottom:12px"><input class="in" id="uem" type="email" placeholder="ইমেইল" autocomplete="email"></div>
+      <div class="fg" style="margin-bottom:12px"><input class="in" id="upw" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" autocomplete="current-password"></div>
+      <button type="button" class="btn" id="uLoginBtn">লগইন করুন</button>
+      <button type="button" class="btn ghost" id="uSignupBtn">নতুন অ্যাকাউন্ট খুলুন</button>
+      <button type="button" class="back-btn" id="uResetBtn" style="margin:12px auto 0">পাসওয়ার্ড ভুলে গেছেন?</button>
+    </div>
+    <div class="sub" id="gerr" style="color:var(--bad);min-height:1.4em;margin-top:10px"></div>
+  </section>
+
+  <section class="screen" id="form">
+    <button type="button" class="back-btn" data-go="pkg"><i class="fa-solid fa-arrow-left"></i> ফিরে যান</button>
+    <h2>আপনার তথ্য দিন</h2><p class="sub">ওয়েবসাইট সম্পর্কে যত বিস্তারিত লিখবেন, কাজ তত ভালো হবে। পরের ধাপে আলাদা সিকিউর পেমেন্ট পেজে যাবেন।</p>
+    <form id="detailsForm" novalidate autocomplete="off">
+      <input class="hp" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="fg"><label><i class="fa-solid fa-user"></i> আপনার নাম</label><input class="in" id="name" placeholder="পুরো নাম লিখুন" maxlength="60"><div class="err">অনুগ্রহ করে নাম লিখুন</div></div>
+      <div class="fg"><label><i class="fa-solid fa-phone"></i> মোবাইল নম্বর / টেলিগ্রাম ইউজারনেম</label><input class="in" id="contact" placeholder="017xxxxxxxx বা @username" maxlength="40"><div class="err">সঠিক মোবাইল নম্বর বা @username দিন</div></div>
+      <div class="fg"><label><i class="fa-solid fa-file-lines"></i> ওয়েবসাইটের বিবরণ</label><textarea class="in" id="desc" placeholder="কি ধরনের ওয়েবসাইট চান, কি কি ফিচার থাকবে..." maxlength="1000"></textarea><div class="err">কমপক্ষে ১০ অক্ষরের বিবরণ লিখুন</div></div>
+      <button class="btn" type="submit"><i class="fa-solid fa-lock"></i> সিকিউর পেমেন্টে যান <i class="fa-solid fa-arrow-right"></i></button>
+    </form>
+  </section>
+
+  <section class="screen" id="orders">
+    <button type="button" class="back-btn" data-go="home"><i class="fa-solid fa-arrow-left"></i> হোমে যান</button>
+    <h2>আমার অর্ডার</h2><p class="sub">অ্যাডমিন অ্যাপ্রুভ করলে এখানে কনফার্মেশন মেসেজ ও টেলিগ্রাম বাটন দেখা যাবে। পেজটি নিজে থেকেই আপডেট হয়।</p>
+    <div id="ordList"></div>
+    <button type="button" class="btn ghost" id="ordRef"><i class="fa-solid fa-rotate"></i> রিফ্রেশ করুন</button>
+  </section>
+</div>
+
+<div id="adm"><div class="wrap">
+  <div id="alogin" class="box">
+    <h1><i class="fa-solid fa-shield-halved"></i> Admin Login</h1>
+    <p class="sub">শুধু অ্যাডমিনের জন্য</p>
+    <input class="in" id="aem" type="email" placeholder="ইমেইল" autocomplete="username">
+    <input class="in" id="apw" type="password" placeholder="পাসওয়ার্ড" autocomplete="current-password">
+    <button class="ab full" id="aloginBtn">লগইন করুন</button>
+    <button class="ab g full" id="acloseBtn" style="margin-top:8px">← সাইটে ফিরুন</button>
+    <div class="msg" id="almsg"></div>
+  </div>
+  <div id="adash" class="hide">
+    <div class="top">
+      <h1><i class="fa-solid fa-gauge-high"></i> অ্যাডমিন প্যানেল</h1>
+      <div style="display:flex;gap:8px"><button class="ab g" id="arefBtn"><i class="fa-solid fa-rotate"></i> রিফ্রেশ</button><button class="ab g" id="aoutBtn"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button></div>
+    </div>
+    <div class="tabs"><button class="ab g act" data-tab="ord"><i class="fa-solid fa-box"></i> অর্ডার</button><button class="ab g" data-tab="ban"><i class="fa-solid fa-image"></i> ব্যানার</button></div>
+    <div id="pOrd">
+      <div class="stats" id="astats"></div>
+      <div class="tools">
+        <input class="in" id="aq" placeholder="নাম, ফোন, TrxID বা অর্ডার আইডি খুঁজুন">
+        <select class="in" id="af"><option value="all">সব</option><option value="pending">পেন্ডিং</option><option value="approved">অ্যাপ্রুভড</option><option value="rejected">রিজেক্টেড</option></select>
+      </div>
+      <div id="alist"></div>
+    </div>
+    <div id="pBan" class="hide box">
+      <h2 style="margin-bottom:12px">হোমপেজ ব্যানার</h2>
+      <div class="bprev" id="bnPrev">কোনো ব্যানার নেই</div>
+      <label>ছবির লিংক (https://...)</label>
+      <input class="in" id="bnUrl" placeholder="https://example.com/banner.jpg" maxlength="500">
+      <label>অথবা ফাইল থেকে আপলোড (অটো ছোট করা হবে)</label>
+      <input class="in" id="bnFile" type="file" accept="image/png,image/jpeg,image/webp">
+      <label>ক্লিক করলে যে লিংকে যাবে (ঐচ্ছিক, https://...)</label>
+      <input class="in" id="bnLink" placeholder="https://t.me/..." maxlength="500">
+      <label class="chk"><input type="checkbox" id="bnOn" checked> ব্যানার চালু রাখুন</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="ab" id="bnSave"><i class="fa-solid fa-floppy-disk"></i> সেভ করুন</button><button class="ab del" id="bnDel"><i class="fa-solid fa-trash"></i> ব্যানার মুছুন</button></div>
+      <div class="msg" id="bnMsg"></div>
+    </div>
+  </div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+function boot(){
+try { if (window.top !== window.self) window.top.location = window.self.location; } catch (e) { document.body.innerHTML = ''; }
+
+const CFG = {
+  telegram: 'WebMakerBdBot',
+  payBot: 'PaymentVerifyBdWebMakerBot',
+  payPage: 'pay.html',
+  db: 'https://bd-web-maker-default-rtdb.firebaseio.com',
+  key: 'AIzaSyDmSG4EPJoRHiCJSI58W63PFlHQeZX_XAI',
+  number: '01863062759',
+  adminIdleMin: 10, adminPollSec: 20, userPollSec: 20
+};
+const PKGS = {
+  basic:   {name:'নরমাল (Basic)',   price:50,  icon:'fa-seedling', desc:'সিম্পল সিঙ্গেল পেজ ওয়েবসাইট', feats:['সিঙ্গেল পেজ ডিজাইন','মোবাইল ফ্রেন্ডলি লেআউট','বেসিক কন্টাক্ট সেকশন']},
+  plus:    {name:'প্লাস (Plus)',    price:70,  icon:'fa-star',     desc:'বেসিকের চেয়ে বেশি ফিচার ও অ্যানিমেশন', feats:['২ পেজের ওয়েবসাইট','বেসিক অ্যানিমেশন ইফেক্ট','টেলিগ্রাম/হোয়াটসঅ্যাপ বাটন','সোশ্যাল মিডিয়া লিংক']},
+  standard:{name:'মাঝারি (Standard)',price:250, icon:'fa-rocket',   desc:'রেসপন্সিভ ডিজাইন ও স্ট্যান্ডার্ড ফিচার', feats:['মাল্টি-সেকশন রেসপন্সিভ ডিজাইন','ব্র্যান্ডিং কালার ও লোগো সাপোর্ট','কন্টাক্ট ফর্ম ও সোশ্যাল লিংক','১ বার ফ্রি রিভিশন']},
+  ultra:   {name:'হাই-টেক (Ultra)', price:500, icon:'fa-bolt',     desc:'হাই সিকিউরিটি, অ্যাডমিন সাপোর্ট ও টেলিগ্রাম বট', feats:['প্রিমিয়াম অ্যানিমেটেড ডিজাইন','অ্যাডমিন প্যানেল সাপোর্ট','টেলিগ্রাম বট ইন্টিগ্রেশন','হাই সিকিউরিটি সেটআপ','অগ্রাধিকার সাপোর্ট']}
+};
+const ORDER = ['home','pkg','login','form','orders'];
+const STEPS = ['প্যাকেজ','তথ্য','পেমেন্ট','সম্পন্ন'];
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const S = { pkg:null, name:'', contact:'', desc:'' };
+let cur = 'home', shownAt = 0, U = null, afterLogin = null, ordT = null, ordSt = {}, leaving = false;
+const $ = id => document.getElementById(id);
+const bn = n => String(n).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+const taka = n => '৳ ' + bn(n);
+const clean = s => s.replace(/[\u0000-\u0008\u000B-\u001F\u007F<>]/g, '').trim();
+const sig = s => { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36).toUpperCase(); };
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const el = (tag, cls, text) => { const e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; };
+const ss = { get(k){ try { return JSON.parse(sessionStorage.getItem(k)); } catch(e){ return null; } }, set(k,v){ try { sessionStorage.setItem(k, JSON.stringify(v)); } catch(e){} }, del(k){ try { sessionStorage.removeItem(k); } catch(e){} } };
+
+/* ===== ব্যানার ===== */
+const IMG_OK = u => typeof u === 'string' && u.length < 600000 && (/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(u) || /^https:\/\/[^\s"'<>]+$/.test(u));
+const LINK_OK = u => typeof u === 'string' && /^https:\/\/[^\s"'<>]+$/.test(u);
+async function loadBanner(){
+  try {
+    const r = await fetch(CFG.db + '/settings/banner.json'); if(!r.ok) return;
+    const b = await r.json(); const box = $('banner');
+    if(!b || !b.on || !IMG_OK(b.img)){ box.classList.add('hide'); return; }
+    const im = $('bannerImg'); im.onerror = () => box.classList.add('hide'); im.src = b.img;
+    if(LINK_OK(b.link)) box.href = b.link; else box.removeAttribute('href');
+    box.classList.remove('hide');
+  } catch(e) {}
+}
+
+/* ===== অথ ===== */
+function saveAuth(){ ss.set('wm_auth', { uid:U.uid, email:U.email, name:U.name, rtok:U.rtok }); }
+async function uTok(){
+  if(!U) throw new Error('SESSION_EXPIRED');
+  if(U.tok && Date.now() < U.exp - 60000) return;
+  const r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + CFG.key,
+    { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'grant_type=refresh_token&refresh_token=' + encodeURIComponent(U.rtok) });
+  const d = await r.json();
+  if(!r.ok) throw new Error('SESSION_EXPIRED');
+  U.tok = d.id_token; U.rtok = d.refresh_token; U.exp = Date.now() + (+d.expires_in) * 1000; saveAuth();
+}
+async function uGet(path){
+  await uTok();
+  const r = await fetch(`${CFG.db}/${path}.json?auth=${encodeURIComponent(U.tok)}`);
+  if(!r.ok) throw new Error('DB_' + r.status);
+  return r.json();
+}
+async function restore(){
+  const a = ss.get('wm_auth'); if(!a || !a.rtok) return;
+  U = { uid:a.uid, email:a.email, name:a.name, tok:'', rtok:a.rtok, exp:0 };
+  try { await uTok(); setUbar(); } catch(e){ U = null; ss.del('wm_auth'); }
+}
+
+$('stepper').innerHTML = STEPS.map(s => `<div class="stp"><i></i><span>${s}</span></div>`).join('');
+
+function needs(id){
+  if(['pkg','form'].includes(id) && !S.pkg) return 'home';
+  if(['form','orders'].includes(id) && !U) return 'login';
+  return null;
+}
+function go(id){
+  const r = needs(id);
+  if(r){ if(r === 'login') afterLogin = id; id = r; }
+  if(id === 'login' && U){ id = afterLogin || 'home'; afterLogin = null; }
+  const dir = ORDER.indexOf(id) >= ORDER.indexOf(cur) ? 'fwd' : 'back';
+  cur = id;
+  document.querySelectorAll('.screen').forEach(s => { s.classList.remove('on','fwd','back'); if(s.id === id) s.classList.add('on', dir); });
+  const fi = { home:0, pkg:0, login:0, form:1 }[id];
+  document.querySelectorAll('.stp').forEach((d, i) => d.classList.toggle('on', fi !== undefined && i <= fi));
+  if(id !== 'orders') stopOrdPoll();
+  if(id === 'pkg') renderPkg();
+  if(id === 'form'){ shownAt = Date.now(); if(!$('name').value && U && U.name) $('name').value = U.name.slice(0, 60); }
+  if(id === 'orders'){ loadOrders(); startOrdPoll(); }
+  window.scrollTo(0, 0);
+}
+document.addEventListener('click', e => { const g = e.target.closest('[data-go]'); if(g) go(g.dataset.go); });
+
+$('pkgGrid').innerHTML = Object.entries(PKGS).map(([k,p],i) =>
+  `<button type="button" class="card${k==='standard'?' hot':''}" style="--i:${i}" data-pkg="${k}">${k==='standard'?'<span class="tag">জনপ্রিয়</span>':''}<div class="ic"><i class="fa-solid ${p.icon}"></i></div><div class="nm">${p.name}</div><div class="pr">${taka(p.price)}</div><div class="ds">${p.desc}</div></button>`).join('');
+$('pkgGrid').addEventListener('click', e => { const c = e.target.closest('[data-pkg]'); if(!c) return; S.pkg = { key:c.dataset.pkg, ...PKGS[c.dataset.pkg] }; go('pkg'); });
+function countUp(el, to){
+  if(RM){ el.textContent = taka(to); return; }
+  const t0 = performance.now();
+  (function f(n){ const k = Math.min(1, (n - t0) / 700); el.textContent = taka(Math.round(to * (1 - Math.pow(1 - k, 3)))); if(k < 1) requestAnimationFrame(f); })(t0);
+}
+function renderPkg(){
+  $('pkName').textContent = S.pkg.name; countUp($('pkPrice'), S.pkg.price);
+  $('pkFeat').innerHTML = S.pkg.feats.map((f,i) => `<li style="--i:${i}"><i class="fa-solid fa-check"></i>${f}</li>`).join('');
+}
+
+function check(id, ok, msg){
+  const g = $(id).closest('.fg'); g.classList.remove('bad'); void g.offsetWidth; g.classList.toggle('bad', !ok);
+  if(!ok && msg) g.querySelector('.err').textContent = msg;
+  return ok;
+}
+function toast(t){ const e = $('toast'); e.textContent = t; e.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('show'), 2800); }
+
+$('detailsForm').addEventListener('submit', e => {
+  e.preventDefault();
+  if($('website').value || leaving) return;
+  if(!U){ go('login'); return; }
+  if(Date.now() - shownAt < 3000){ toast('অনুগ্রহ করে তথ্যগুলো ভালো করে পূরণ করুন'); return; }
+  const name = clean($('name').value), contact = clean($('contact').value), desc = clean($('desc').value);
+  const v1 = check('name', name.length >= 2);
+  const v2 = check('contact', /^01[3-9]\d{8}$/.test(contact) || /^@[A-Za-z0-9_]{4,32}$/.test(contact));
+  const v3 = check('desc', desc.length >= 10);
+  if(!(v1 && v2 && v3)) return;
+  Object.assign(S, { name, contact, desc });
+  ss.set('wm_cart', { pkg:S.pkg.key, name, contact, desc, t:Date.now() }); ss.del('wm_last'); ss.del('wm_dl');
+  leaving = true; $('go').classList.add('on');
+  setTimeout(() => { location.href = CFG.payPage; }, RM ? 0 : 900);
+});
+
+/* ===== ইমেইল লগইন ===== */
+function setUbar(){ $('uinfo').classList.toggle('hide', !U); $('ulogout').classList.toggle('hide', !U); if(U) $('uinfo').textContent = U.email || U.name; }
+function setUser(d){
+  U = { uid:d.localId, email:d.email || '', name:d.displayName || '', tok:d.idToken, rtok:d.refreshToken, exp:Date.now() + (+d.expiresIn) * 1000 };
+  saveAuth(); setUbar(); toast('স্বাগতম, ' + (U.name || U.email) + ' ✓');
+  const t = afterLogin || 'home'; afterLogin = null; go(t);
+}
+async function emailAuth(signup){
+  const err = $('gerr'); err.textContent = '';
+  const email = $('uem').value.trim(), pw = $('upw').value;
+  if(!EMAIL_RE.test(email)){ err.textContent = 'সঠিক ইমেইল দিন'; return; }
+  if(pw.length < 6){ err.textContent = 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের দিন'; return; }
+  const b = $(signup ? 'uSignupBtn' : 'uLoginBtn'); b.disabled = true;
+  try {
+    const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:' + (signup ? 'signUp' : 'signInWithPassword') + '?key=' + CFG.key,
+      { method:'POST', body: JSON.stringify({ email, password: pw, returnSecureToken: true }) });
+    const d = await r.json();
+    if(!r.ok) throw new Error((d.error && d.error.message) || '');
+    $('upw').value = ''; setUser(d);
+  } catch(e) {
+    const m = String(e.message);
+    err.textContent = m.startsWith('EMAIL_EXISTS') ? 'এই ইমেইল দিয়ে আগেই অ্যাকাউন্ট আছে। লগইন করুন।'
+      : m.startsWith('WEAK_PASSWORD') ? 'পাসওয়ার্ড খুব দুর্বল'
+      : m.startsWith('TOO_MANY') ? 'অনেকবার চেষ্টা হয়েছে, কিছুক্ষণ পর আবার করুন'
+      : (signup ? 'অ্যাকাউন্ট খোলা যায়নি' : 'ইমেইল বা পাসওয়ার্ড ভুল');
+  }
+  b.disabled = false;
+}
+$('uLoginBtn').addEventListener('click', () => emailAuth(false));
+$('uSignupBtn').addEventListener('click', () => emailAuth(true));
+$('upw').addEventListener('keydown', e => { if(e.key === 'Enter') emailAuth(false); });
+$('uResetBtn').addEventListener('click', async () => {
+  const email = $('uem').value.trim(), err = $('gerr');
+  if(!EMAIL_RE.test(email)){ err.textContent = 'আগে উপরে আপনার ইমেইল লিখুন'; return; }
+  try {
+    await fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=' + CFG.key, { method:'POST', body: JSON.stringify({ requestType:'PASSWORD_RESET', email }) });
+    err.textContent = ''; toast('ইমেইল থাকলে রিসেট লিংক পাঠানো হয়েছে');
+  } catch(e) { err.textContent = 'পাঠানো যায়নি'; }
+});
+function resetOrder(){ Object.assign(S, { pkg:null, name:'', contact:'', desc:'' }); document.querySelectorAll('.app input.in, .app textarea.in').forEach(i => i.value = ''); }
+function uLogout(msg){
+  U = null; afterLogin = null; ordSt = {}; ss.del('wm_auth'); ss.del('wm_cart'); ss.del('wm_last'); ss.del('wm_dl');
+  stopOrdPoll(); resetOrder(); setUbar(); go('home'); if(msg) toast(msg);
+}
+$('ulogout').addEventListener('click', () => uLogout('লগআউট হয়েছে'));
+
+/* ===== আমার অর্ডার ===== */
+function tgUrl(bot, msg){ return `https://t.me/${encodeURIComponent(bot)}?text=${encodeURIComponent(msg)}`; }
+function tgOrder(id, o, kind){
+  const code = sig([id, o.trx, o.price, CFG.number].join('|'));
+  const pk = PKGS[o.package] ? PKGS[o.package].name : o.package;
+  const head = kind === 'approved' ? '✅ আমার অর্ডার কনফার্ম হয়েছে। ওয়েবসাইটের লিংক ও বিস্তারিত নিয়ে কথা বলতে চাই।' : 'আমার পেমেন্ট যাচাই নিয়ে সাহায্য দরকার।';
+  return tgUrl(kind === 'approved' ? CFG.telegram : CFG.payBot, head + `\nআইডি: ${id}\nনাম: ${o.name}\nপ্যাকেজ: ${pk} (${o.price} টাকা)\nTrxID: ${o.trx}\nচেক কোড: ${code}`);
+}
+const NOTE = {
+  pending:  '⏳ আপনার পেমেন্ট যাচাই চলছে। অ্যাডমিন TrxID মিলিয়ে অ্যাপ্রুভ করলে এখানে কনফার্মেশন মেসেজ আসবে।',
+  approved: '✅ অভিনন্দন! আপনার পেমেন্ট যাচাই হয়েছে এবং অর্ডার কনফার্ম হয়েছে। এখন টেলিগ্রামে @' + CFG.telegram + ' বটে যোগাযোগ করুন — সেখানে আপনার ওয়েবসাইটের লিংক ও সব বিষয়ে কথা হবে।',
+  rejected: '❌ পেমেন্ট যাচাই করা যায়নি (TrxID বা টাকার পরিমাণ মেলেনি)। সঠিক তথ্যসহ @' + CFG.payBot + ' বটে যোগাযোগ করুন।'
+};
+const ABD = { pending:'যাচাই চলছে', approved:'কনফার্মড', rejected:'রিজেক্টেড' };
+function tgBtn(href, icon, text){
+  const a = el('a', 'btn tg'); a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+  a.append(el('i', icon), document.createTextNode(' ' + text)); return a;
+}
+function drawOrders(list){
+  const box = $('ordList');
+  if(!list.length){ box.replaceChildren(el('div', 'sub center', 'এখনো কোনো অর্ডার নেই।')); return; }
+  box.replaceChildren(...list.map(({id, o, st}, i) => {
+    const c = el('div', 'ord ' + st); c.style.animationDelay = Math.min(i, 8) * .06 + 's';
+    const h = el('div', 'oh'); h.append(el('span', 'oid', id), el('span', 'bd ' + st, ABD[st]));
+    const pk = PKGS[o.package] ? PKGS[o.package].name : o.package;
+    c.append(h, el('div', '', `প্যাকেজ: ${pk} (${taka(o.price)}) • ${o.method === 'bkash' ? 'bKash' : 'Nagad'} • TrxID: ${o.trx}`), el('div', 'note ' + st, NOTE[st]));
+    if(st === 'approved') c.append(tgBtn(tgOrder(id, o, 'approved'), 'fa-brands fa-telegram', 'টেলিগ্রামে যোগাযোগ করুন (@' + CFG.telegram + ')'));
+    else c.append(tgBtn(tgOrder(id, o, 'help'), 'fa-solid fa-shield-check', 'পেমেন্ট ভেরিফাই বট (@' + CFG.payBot + ')'));
+    return c;
+  }));
+}
+async function loadOrders(silent){
+  if(!U) return;
+  const box = $('ordList');
+  if(!silent) box.replaceChildren(el('div', 'skel'), el('div', 'skel'));
+  try {
+    const ids = Object.keys(await uGet('userOrders/' + U.uid) || {});
+    const rows = await Promise.all(ids.map(async id => {
+      const [o, r] = await Promise.all([uGet('orders/' + id), uGet('review/' + id)]);
+      return { id, o, st: (r && r.status) || 'pending' };
+    }));
+    const list = rows.filter(x => x.o).sort((a, b) => (b.o.createdAt || 0) - (a.o.createdAt || 0));
+    list.forEach(x => { if(ordSt[x.id] && ordSt[x.id] !== 'approved' && x.st === 'approved'){ toast('✅ আপনার অর্ডার কনফার্ম হয়েছে!'); confetti(); } ordSt[x.id] = x.st; });
+    drawOrders(list);
+  } catch(e) {
+    if(e.message === 'SESSION_EXPIRED'){ uLogout('সেশন শেষ। আবার লগইন করুন।'); return; }
+    if(!silent) box.replaceChildren(el('div', 'sub center', 'লোড করা যায়নি। রিফ্রেশ করুন।'));
+  }
+}
+function startOrdPoll(){ stopOrdPoll(); ordT = setInterval(() => { if(!document.hidden) loadOrders(true); }, CFG.userPollSec * 1000); }
+function stopOrdPoll(){ if(ordT){ clearInterval(ordT); ordT = null; } }
+$('ordRef').addEventListener('click', () => loadOrders());
+
+/* ===== অ্যাডমিন ===== */
+const APK = { basic:'নরমাল', plus:'প্লাস', standard:'মাঝারি', ultra:'হাই-টেক' };
+const AST = { pending:'পেন্ডিং', approved:'অ্যাপ্রুভড', rejected:'রিজেক্টেড' };
+let atok = null, artok = null, aexp = 0, aorders = {}, areview = {}, aprev = null, apoll = null, aidle = null, afails = 0, alock = 0, bnData = '';
+
+let taps = 0, tapT;
+$('logo').addEventListener('click', () => { taps++; clearTimeout(tapT); tapT = setTimeout(() => taps = 0, 1500); if(taps >= 5){ taps = 0; openAdmin(); } });
+function openAdmin(){ $('adm').classList.add('on'); document.body.style.overflow = 'hidden'; if(!atok){ $('alogin').classList.remove('hide'); $('adash').classList.add('hide'); } }
+function closeAdmin(){ aLogout(); $('adm').classList.remove('on'); document.body.style.overflow = ''; }
+$('acloseBtn').onclick = closeAdmin;
+
+async function aLogin(email, pass){
+  const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + CFG.key, { method:'POST', body: JSON.stringify({ email, password: pass, returnSecureToken: true }) });
+  const d = await r.json(); if(!r.ok) throw new Error('LOGIN_FAILED');
+  atok = d.idToken; artok = d.refreshToken; aexp = Date.now() + (+d.expiresIn) * 1000;
+}
+async function aToken(){
+  if(Date.now() < aexp - 60000) return;
+  const r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + CFG.key, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'grant_type=refresh_token&refresh_token=' + encodeURIComponent(artok) });
+  const d = await r.json(); if(!r.ok) throw new Error('SESSION_EXPIRED');
+  atok = d.id_token; artok = d.refresh_token; aexp = Date.now() + (+d.expires_in) * 1000;
+}
+function aLogout(msg){
+  atok = artok = null; aorders = {}; areview = {}; aprev = null; clearInterval(apoll); clearTimeout(aidle);
+  $('adash').classList.add('hide'); $('alogin').classList.remove('hide'); $('apw').value = ''; $('almsg').textContent = msg || '';
+}
+async function dbGet(path){ await aToken(); const r = await fetch(`${CFG.db}/${path}.json?auth=${encodeURIComponent(atok)}`); if(!r.ok) throw new Error('DB_' + r.status); return r.json(); }
+async function dbPatch(body){ await aToken(); const r = await fetch(`${CFG.db}/.json?auth=${encodeURIComponent(atok)}`, { method:'PATCH', body: JSON.stringify(body) }); if(!r.ok) throw new Error('DB_' + r.status); }
+async function aLoad(){
+  try {
+    [aorders, areview] = (await Promise.all([dbGet('orders'), dbGet('review')])).map(x => x || {});
+    const n = Object.keys(aorders).length;
+    if(aprev !== null && n > aprev) toast('🔔 নতুন অর্ডার এসেছে!');
+    aprev = n; aRender();
+  } catch(e) {
+    const m = String(e.message);
+    if(m === 'DB_401' || m === 'DB_403') toast('অনুমতি নেই। Rules-এ ADMIN_UID ঠিক আছে কিনা দেখুন।');
+    else if(m === 'SESSION_EXPIRED') aLogout('সেশন শেষ। আবার লগইন করুন।');
+    else toast('লোড করা যায়নি। ইন্টারনেট চেক করুন।');
+  }
+}
+function aList(){ return Object.entries(aorders).map(([id, o]) => ({ id, ...o, st: (areview[id] && areview[id].status) || 'pending' })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); }
+function aRender(){
+  const all = aList();
+  const rev = all.filter(o => o.st === 'approved').reduce((s, o) => s + (+o.price || 0), 0);
+  const stats = [['মোট অর্ডার', all.length], ['পেন্ডিং', all.filter(o => o.st === 'pending').length], ['অ্যাপ্রুভড', all.filter(o => o.st === 'approved').length], ['অ্যাপ্রুভড আয়', '৳ ' + bn(rev)]];
+  $('astats').replaceChildren(...stats.map(([l, v], i) => { const d = el('div', 'st'); d.style.animationDelay = i * .07 + 's'; d.append(el('b', '', typeof v === 'number' ? bn(v) : v), el('span', '', l)); return d; }));
+  const q = $('aq').value.trim().toLowerCase(), f = $('af').value;
+  const rows = all.filter(o => (f === 'all' || o.st === f) && (!q || [o.id, o.name, o.contact, o.trx, o.sender, o.email].some(x => String(x || '').toLowerCase().includes(q))));
+  if(!rows.length){ $('alist').replaceChildren(el('div', 'empty', 'কোনো অর্ডার পাওয়া যায়নি')); return; }
+  $('alist').replaceChildren(...rows.map((o, i) => {
+    const c = el('div', 'o ' + o.st); c.style.animationDelay = Math.min(i, 8) * .04 + 's';
+    const h = el('div', 'oh'), l = el('div');
+    l.append(el('span', 'id', o.id), el('div', 'time', o.createdAt ? new Date(o.createdAt).toLocaleString('bn-BD') : ''));
+    h.append(l, el('span', 'badge ' + o.st, AST[o.st]));
+    const r = el('div', 'rows');
+    const add = (k, v, cls) => { const d = el('div'); d.append(el('span', '', k + ': '), el('b', cls || '', v)); r.append(d); return d; };
+    add('নাম', o.name); add('যোগাযোগ', o.contact); add('ইমেইল', o.email || '—');
+    add('প্যাকেজ', (APK[o.package] || o.package) + ' (৳ ' + bn(o.price) + ')');
+    const mism = o.amount == null || +o.amount !== +o.price;
+    add('ইউজার যা পাঠানোর দাবি করেছে', o.amount == null ? '—' : '৳ ' + bn(o.amount) + (mism ? ' ⚠ মিলছে না' : ''), mism ? 'bad' : '');
+    add('মেথড', o.method === 'bkash' ? 'bKash' : 'Nagad'); add('প্রেরক নম্বর', o.sender);
+    const t = add('TrxID', o.trx, 'trx'); t.title = 'কপি করতে ট্যাপ করুন';
+    t.addEventListener('click', async () => { try { await navigator.clipboard.writeText(o.trx); toast('TrxID কপি হয়েছে'); } catch(e) { toast('কপি করা যায়নি'); } });
+    const ds = el('div', 'desc', o.desc), a = el('div', 'acts');
+    const b1 = el('button', 'ab ok', '✓ অ্যাপ্রুভ'), b2 = el('button', 'ab no', '✕ রিজেক্ট'), b3 = el('button', 'ab g', '↺ পেন্ডিং'), b4 = el('button', 'ab del', '🗑 ডিলিট');
+    let armA = false, armed = false;
+    b1.onclick = () => { if(!armA){ armA = true; b1.textContent = 'অ্যাপে মিলিয়েছেন? আবার চাপুন'; setTimeout(() => { armA = false; b1.textContent = '✓ অ্যাপ্রুভ'; }, 4000); return; } setStatus(o.id, 'approved'); };
+    b2.onclick = () => setStatus(o.id, 'rejected'); b3.onclick = () => setStatus(o.id, 'pending');
+    b4.onclick = () => { if(!armed){ armed = true; b4.textContent = 'নিশ্চিত? আবার চাপুন'; setTimeout(() => { armed = false; b4.textContent = '🗑 ডিলিট'; }, 3000); return; } removeOrder(o); };
+    if(o.st !== 'approved') a.append(b1); if(o.st !== 'rejected') a.append(b2); if(o.st !== 'pending') a.append(b3); a.append(b4);
+    c.append(h, r, ds);
+    if(o.st === 'pending') c.append(el('div', 'time', '⚠ অ্যাপ্রুভের আগে নিজের bKash/Nagad অ্যাপে এই TrxID, প্রেরক নম্বর ও টাকা মিলিয়ে নিন।'));
+    c.append(a); return c;
+  }));
+}
+async function setStatus(id, st){
+  try { await dbPatch({ ['review/' + id]: { status: st, at: { '.sv': 'timestamp' } } }); areview[id] = { status: st }; aRender(); toast('আপডেট হয়েছে ✓'); }
+  catch(e) { toast('আপডেট করা যায়নি'); }
+}
+async function removeOrder(o){
+  try {
+    const b = { ['orders/' + o.id]: null, ['trx/' + o.trx]: null, ['review/' + o.id]: null };
+    if(o.uid) b['userOrders/' + o.uid + '/' + o.id] = null;
+    await dbPatch(b); delete aorders[o.id]; delete areview[o.id]; aRender(); toast('ডিলিট হয়েছে');
+  } catch(e) { toast('ডিলিট করা যায়নি'); }
+}
+
+/* অ্যাডমিন: ট্যাব ও ব্যানার এডিটর */
+document.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('[data-tab]').forEach(x => x.classList.toggle('act', x === b));
+  $('pOrd').classList.toggle('hide', b.dataset.tab !== 'ord'); $('pBan').classList.toggle('hide', b.dataset.tab !== 'ban');
+  if(b.dataset.tab === 'ban') loadBannerAdmin();
+}));
+function bnPreview(src){
+  const p = $('bnPrev'); p.replaceChildren();
+  if(!IMG_OK(src)){ p.textContent = 'কোনো ব্যানার নেই'; return; }
+  const im = el('img'); im.alt = 'প্রিভিউ'; im.referrerPolicy = 'no-referrer'; im.onerror = () => { p.textContent = 'ছবি লোড হয়নি'; }; im.src = src; p.append(im);
+}
+async function loadBannerAdmin(){
+  try {
+    const b = await dbGet('settings/banner') || {};
+    bnData = b.img && b.img.startsWith('data:') ? b.img : '';
+    $('bnUrl').value = b.img && !bnData ? b.img : ''; $('bnLink').value = b.link || ''; $('bnOn').checked = b.on !== false;
+    bnPreview(b.img || '');
+  } catch(e) { toast('ব্যানার লোড করা যায়নি'); }
+}
+$('bnUrl').addEventListener('input', e => { bnData = ''; bnPreview(e.target.value.trim()); });
+$('bnFile').addEventListener('change', e => {
+  const f = e.target.files[0]; $('bnMsg').textContent = ''; if(!f) return;
+  if(!/^image\/(png|jpeg|webp)$/.test(f.type)){ $('bnMsg').textContent = 'শুধু PNG/JPG/WEBP দিন'; return; }
+  const fr = new FileReader();
+  fr.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const w = Math.min(1200, im.width), h = Math.round(im.height * w / im.width);
+      const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(im, 0, 0, w, h);
+      let q = .85, out = c.toDataURL('image/jpeg', q);
+      while(out.length > 380000 && q > .35){ q -= .1; out = c.toDataURL('image/jpeg', q); }
+      if(out.length > 380000){ $('bnMsg').textContent = 'ছবি অনেক বড়। ছোট ছবি দিন।'; return; }
+      bnData = out; $('bnUrl').value = ''; bnPreview(out);
+    };
+    im.onerror = () => { $('bnMsg').textContent = 'ছবি পড়া যায়নি'; };
+    im.src = fr.result;
+  };
+  fr.readAsDataURL(f);
+});
+$('bnSave').onclick = async () => {
+  const img = bnData || $('bnUrl').value.trim(), link = $('bnLink').value.trim(), m = $('bnMsg'); m.textContent = '';
+  if(!IMG_OK(img)){ m.textContent = 'সঠিক https ছবির লিংক দিন বা ফাইল আপলোড করুন'; return; }
+  if(link && !LINK_OK(link)){ m.textContent = 'ক্লিক-লিংক অবশ্যই https:// দিয়ে শুরু হতে হবে'; return; }
+  try { await dbPatch({ 'settings/banner': { img, link, on: $('bnOn').checked, at: { '.sv': 'timestamp' } } }); toast('ব্যানার সেভ হয়েছে ✓'); loadBanner(); }
+  catch(e) { m.textContent = 'সেভ হয়নি। Rules-এ settings অংশ যোগ করেছেন কিনা দেখুন।'; }
+};
+$('bnDel').onclick = async () => {
+  try { await dbPatch({ 'settings/banner': null }); bnData = ''; $('bnUrl').value = ''; $('bnLink').value = ''; bnPreview(''); $('banner').classList.add('hide'); toast('ব্যানার মুছে গেছে'); }
+  catch(e) { toast('মোছা যায়নি'); }
+};
+
+async function doLogin(){
+  if(Date.now() < alock){ $('almsg').textContent = 'কিছুক্ষণ পর আবার চেষ্টা করুন'; return; }
+  const b = $('aloginBtn'); b.disabled = true; $('almsg').textContent = '';
+  try {
+    await aLogin($('aem').value.trim(), $('apw').value);
+    afails = 0; $('alogin').classList.add('hide'); $('adash').classList.remove('hide');
+    await aLoad(); apoll = setInterval(() => { if(!document.hidden) aLoad(); }, CFG.adminPollSec * 1000); bumpIdle();
+  } catch(e) {
+    if(++afails >= 5){ alock = Date.now() + 60000; afails = 0; $('almsg').textContent = 'অনেকবার ভুল। ১ মিনিট অপেক্ষা করুন।'; }
+    else $('almsg').textContent = 'ইমেইল বা পাসওয়ার্ড ভুল।';
+  }
+  b.disabled = false;
+}
+$('aloginBtn').onclick = doLogin;
+$('apw').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+$('aoutBtn').onclick = () => aLogout('লগআউট হয়েছে');
+$('arefBtn').onclick = () => { aLoad(); toast('রিফ্রেশ হচ্ছে...'); };
+$('aq').oninput = aRender; $('af').onchange = aRender;
+function bumpIdle(){ clearTimeout(aidle); if(atok) aidle = setTimeout(() => aLogout('নিষ্ক্রিয়তার কারণে লগআউট হয়েছে।'), CFG.adminIdleMin * 60000); }
+['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, bumpIdle));
+
+/* ===== অ্যানিমেশন ===== */
+document.addEventListener('pointerdown', e => {
+  const b = e.target.closest('.btn'); if(!b || RM) return;
+  const r = b.getBoundingClientRect(), s = document.createElement('span');
+  s.className = 'rip'; s.style.left = (e.clientX - r.left) + 'px'; s.style.top = (e.clientY - r.top) + 'px'; b.appendChild(s); setTimeout(() => s.remove(), 600);
+});
+$('pkgGrid').addEventListener('pointermove', e => {
+  const c = e.target.closest('.card'); if(!c || RM || e.pointerType !== 'mouse') return;
+  const r = c.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+  c.style.transform = `perspective(700px) rotateX(${-py*10}deg) rotateY(${px*10}deg) translateY(-5px)`;
+});
+$('pkgGrid').addEventListener('pointerout', e => { const c = e.target.closest('.card'); if(c) c.style.transform = ''; });
+(function(){
+  if(RM) return;
+  const c = $('bg'), x = c.getContext('2d'); let w, h, P = [];
+  function rs(){ w = c.width = innerWidth; h = c.height = innerHeight; P = Array.from({length: Math.min(70, w / 16 | 0)}, () => ({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5)*.45, vy:(Math.random()-.5)*.45})); }
+  rs(); addEventListener('resize', rs);
+  (function f(){
+    x.clearRect(0, 0, w, h);
+    P.forEach((p, i) => {
+      p.x += p.vx; p.y += p.vy; if(p.x < 0 || p.x > w) p.vx *= -1; if(p.y < 0 || p.y > h) p.vy *= -1;
+      x.fillStyle = 'rgba(0,242,254,.65)'; x.fillRect(p.x, p.y, 2, 2);
+      for(let j = i + 1; j < P.length; j++){ const q = P[j], d = Math.hypot(p.x - q.x, p.y - q.y);
+        if(d < 125){ x.strokeStyle = `rgba(79,172,254,${.17 * (1 - d / 125)})`; x.beginPath(); x.moveTo(p.x, p.y); x.lineTo(q.x, q.y); x.stroke(); } }
+    });
+    requestAnimationFrame(f);
+  })();
+})();
+function confetti(){
+  if(RM) return;
+  const c = $('fx'), x = c.getContext('2d'); c.width = innerWidth; c.height = innerHeight;
+  const cols = ['#00f2fe','#4facfe','#9b5cff','#2ea44f','#f7931e'];
+  const A = Array.from({length: 100}, () => ({x:innerWidth/2, y:innerHeight/3, vx:(Math.random()-.5)*15, vy:Math.random()*-12-3, s:4+Math.random()*5, c:cols[Math.random()*5|0], r:Math.random()*6}));
+  let t = 0;
+  (function f(){ x.clearRect(0, 0, c.width, c.height);
+    A.forEach(p => { p.vy += .3; p.x += p.vx; p.y += p.vy; p.r += .2; x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c; x.fillRect(-p.s/2, -p.s/2, p.s, p.s*.6); x.restore(); });
+    if(++t < 140) requestAnimationFrame(f); else x.clearRect(0, 0, c.width, c.height); })();
+}
+
+go('home'); loadBanner();
+restore().then(() => { if(location.hash === '#orders') go('orders'); });
+if(location.hash === '#admin') openAdmin();
+}
+(function w(){
+  if(document.readyState !== 'loading' && document.getElementById('stepper') && document.getElementById('toast')) boot();
+  else setTimeout(w, 50);
+})();
+</script>
+</body>
+</html>
